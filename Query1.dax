@@ -1,0 +1,23 @@
+﻿DEFINE
+    MEASURE 'Sheet1'[0-2] =
+        COUNTROWS ( FILTER ( 'Sheet1', 'Sheet1'[Remaining Time (in Hours)] <= 2 ) )
+    MEASURE 'Sheet1'[2-4] =
+        COUNTROWS (
+            FILTER (
+                'Sheet1',
+                'Sheet1'[Remaining Time (in Hours)] <= 4
+                    && 'Sheet1'[Remaining Time (in Hours)] > 2
+            )
+        )
+    MEASURE 'Sheet1'[>4] =
+        COUNTROWS ( FILTER ( 'Sheet1', 'Sheet1'[Remaining Time (in Hours)] > 4 ) )
+    MEASURE 'Sheet1'[#Breached] = COUNTROWS ( FILTER ( 'Sheet1', 'Sheet1'[Status] = "Breached" )) 
+
+EVALUATE
+ADDCOLUMNS (
+    VALUES ( 'Sheet1'[Area] ),
+    "0-2", 'Sheet1'[0-2],
+    "2-4", 'Sheet1'[2-4],
+    ">4", 'Sheet1'[>4],
+    "# Breached", 'Sheet1'[#Breached]
+)
